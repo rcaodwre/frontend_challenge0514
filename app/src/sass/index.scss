@@ -1,0 +1,76 @@
+// base 
+html,body,div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend,figure, input, textarea, p, blockquote, th, td, em, button {
+  margin:0;
+  padding:0;
+}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary {
+  display:block;
+}
+img {
+  border:0;
+  margin:0;
+  padding:0;
+  vertical-align: top;
+  display: block;
+}
+input,textarea,select {
+  border:none;
+  font-family:inherit;
+  font-size:inherit;
+  font-weight:inherit;
+  resize:none;
+  outline:0;
+  box-shadow: none;
+  -webkit-appearance: none;
+}
+table {
+  border-collapse:collapse;
+}
+a,a:hover,a:link,a:visited,a:active{
+  color:#fff;
+  text-decoration:none;
+}
+h1, h2, h3, h4, h5,h6 {
+  font-size:100%;
+  font-weight:normal;
+}
+ul,li {
+  list-style: none;
+}
+dfn,em,i {
+  font-style:normal;
+}
+html{
+  overflow-y: auto;
+  min-height: 100vh;
+  background: #F2F2F2;
+}
+body {
+  line-height:1.5;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  background: #F2F2F2;
+  font-family: '微软雅黑','sans-serif';
+}
+
+
+
+//main
+//body
+.body{ width:100%; }
+
+//header
+header {width:100%;  background-color: #333; position: fixed; top:0px; left:0px;  }
+header .headerBox{ width:375px; height:64px;  margin:0 auto; display: flex;  align-items: center; }
+header .logo { color:#fff; padding-left:20px;  font-size:18px;   }
+
+//footer
+footer { width:100%; background-color: #333; position:fixed; bottom:0px; left:0px; }
+footer .footerBox{ width:375px; height:64px;  margin:0 auto; display: flex;  align-items: center; justify-content: center;  }
+footer .footerBox p{ text-align: center;color:#fff; font-size: 12px;}
+
+@media screen and (min-width:800px){
+  header .headerBox{ width:750px; }
+  footer .footerBox{ width:750px; }
+}

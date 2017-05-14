@@ -1,0 +1,183 @@
+@charset "UTF-8";
+
+html,
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+figure,
+input,
+textarea,
+p,
+blockquote,
+th,
+td,
+em,
+button {
+  margin: 0;
+  padding: 0;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+img {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  display: block;
+}
+
+input,
+textarea,
+select {
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  resize: none;
+  outline: 0;
+  box-shadow: none;
+  -webkit-appearance: none;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+a,
+a:hover,
+a:link,
+a:visited,
+a:active {
+  color: #fff;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+dfn,
+em,
+i {
+  font-style: normal;
+}
+
+html {
+  overflow-y: auto;
+  min-height: 100vh;
+  background: #F2F2F2;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  background: #F2F2F2;
+  font-family: '\5FAE\8F6F\96C5\9ED1','sans-serif';
+}
+
+.body {
+  width: 100%;
+}
+
+header {
+  width: 100%;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+header .headerBox {
+  width: 10rem;
+  height: 1.706667rem;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+header .logo {
+  color: #fff;
+  padding-left: 0.533333rem;
+  font-size: 0.48rem;
+}
+
+footer {
+  width: 100%;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+footer .footerBox {
+  width: 10rem;
+  color: #fff;
+  height: 1.706667rem;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+@media screen and (min-width: 760px) {
+  header .headerBox {
+    width: 20rem;
+  }
+
+  footer .footerBox {
+    width: 20rem;
+  }
+}

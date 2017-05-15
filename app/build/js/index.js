@@ -6813,17 +6813,20 @@
 		_inherits(Main, _React$Component);
 
 		function Main() {
+			var _ref;
+
 			_classCallCheck(this, Main);
 
-			return _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).apply(this, arguments));
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			return _possibleConstructorReturn(this, (_ref = Main.__proto__ || Object.getPrototypeOf(Main)).call.apply(_ref, [this].concat(args)));
 		}
 
 		_createClass(Main, [{
 			key: 'componentDidMount',
-			value: function componentDidMount() {
-
-				//console.log(this) 
-			}
+			value: function componentDidMount() {}
 		}, {
 			key: 'changeValue',
 			value: function changeValue(ev) {}
@@ -6835,11 +6838,28 @@
 		}, {
 			key: 'sendHandle',
 			value: function sendHandle() {
+				this.props.updateLoadingStatus(true);
 				this.props.send({ name: "abc" });
 			}
 		}, {
 			key: 'render',
 			value: function render() {
+
+				var send;
+				if (this.props.state.loadingStatus) {
+					send = _react2.default.createElement(
+						'div',
+						{ className: 'sendBox loading' },
+						'sending,please wait...'
+					);
+				} else {
+					send = _react2.default.createElement(
+						'div',
+						{ onClick: this.sendHandle.bind(this), className: 'sendBox' },
+						'send'
+					);
+				}
+
 				return _react2.default.createElement(
 					'section',
 					{ className: 'body' },
@@ -6939,11 +6959,7 @@
 										null,
 										_react2.default.createElement('input', { placeholder: 'Confirm emall' })
 									),
-									_react2.default.createElement(
-										'div',
-										{ onClick: this.sendHandle.bind(this), className: 'sendBox' },
-										'send'
-									)
+									send
 								),
 								_react2.default.createElement('div', { className: 'formClose close' })
 							)
@@ -6967,8 +6983,9 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.SEND = undefined;
+	exports.UPDATELOADINGSTATUS = exports.SEND = undefined;
 	exports.send = send;
+	exports.updateLoadingStatus = updateLoadingStatus;
 
 	var _fetch = __webpack_require__(78);
 
@@ -6977,20 +6994,27 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SEND = exports.SEND = "SEND";
+	var UPDATELOADINGSTATUS = exports.UPDATELOADINGSTATUS = "UPDATELOADINGSTATUS";
 
 	function send(obj) {
-
 		return {
 			type: SEND,
 			payload: new _fetch2.default({
-				url: "http://publish.ceair.com:8001/api/ShoppingCartapi/GetShoppingCartList",
+				url: " https://l94wc2001h.execute-api.ap-southeast-2.amazonaws.com/prod/fake-auth",
 				data: {
-					abc: "你是",
-					what: 132
+					name: "mobbist",
+					email: "XXXX@fjkd.com"
 				},
-				method: "get",
+				method: "POST",
 				hasLoading: true
 			})
+		};
+	}
+
+	function updateLoadingStatus(boolean) {
+		return {
+			type: UPDATELOADINGSTATUS,
+			data: boolean
 		};
 	}
 
@@ -7023,24 +7047,15 @@
 			_classCallCheck(this, Fetch);
 
 			this.option = option;
+			return this.fetch(option);
 		}
 		// @param {object} option 请求参数对象
 		// @return {promise} fetch
 
 
 		_createClass(Fetch, [{
-			key: 'fetch',
-			value: function (_fetch2) {
-				function fetch(_x) {
-					return _fetch2.apply(this, arguments);
-				}
-
-				fetch.toString = function () {
-					return _fetch2.toString();
-				};
-
-				return fetch;
-			}(function (option) {
+			key: "fetch",
+			value: function fetch(option) {
 				var _this = this;
 
 				reqCount++;
@@ -7064,9 +7079,8 @@
 				//生成所需要到的url, 并将params参数转为URL拼接
 				url = buildUrl(url, paramSerializer(option.params));
 				this.handleBody(option); //请求body处理
-
 				//这里因为对对象使用了扩展运算符, 所以需要babel的presets中的stage-0支持
-				-fetch(url, _extends({
+				return _fetch(url, _extends({
 					method: method
 				}, option.configs)).then(function (args) {
 					return _this.checkStatus(args);
@@ -7079,45 +7093,46 @@
 					return _this.checkCode(args);
 				});
 				//catch 是处理失败的返回
-			})
+			}
 			//成功回调,这里返回把数据Promise返回
 
 		}, {
-			key: 'checkStatus',
+			key: "checkStatus",
 			value: function checkStatus(response) {
 				reqCount--;
 				if (reqCount == 0) {
 					this.hideLoading(); //请求数为零，隐藏loading
 				}
-				console.log(response);
 				return Promise.resolve(response);
 			}
 			//返回数据,讲数据以json的格式返回
 
 		}, {
-			key: 'parseJSON',
+			key: "parseJSON",
 			value: function parseJSON(response) {
 				return response.json();
 			}
 			//如果没有成功返回, 或者数据无法json序列化,则会走这里
 
 		}, {
-			key: 'catchParseJSON',
+			key: "catchParseJSON",
 			value: function catchParseJSON(err) {
-				console.log(err);
+
+				console.log("data Error:" + err);
+				return Promise.reject();
 			}
 			//这里对返回的数据进行检查,根据后端的返回值Code 可以进行一部分的统一处理
 
 		}, {
-			key: 'checkCode',
+			key: "checkCode",
 			value: function checkCode(response) {
-				console.log(response);
+				return Promise.resolve(response);
 			}
 
 			/*@description 根据ContentType系列化参数*/
 
 		}, {
-			key: 'handleBody',
+			key: "handleBody",
 			value: function handleBody(option) {
 				var method = option.method,
 				    _option$headers = option.headers,
@@ -7130,28 +7145,27 @@
 					if (headers['Content-Type'] == undefined) {
 						option.configs.headers = Object.assign({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', Accept: 'application/json, text/plain, */*' }, headers);
 					}
-
-					option.configs.body = option.configs.headers['Content-Type'].indexOf('x-www-form-urlencoded') > -1 && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) == 'object' ? serialize(data) : data;
+					option.configs.body = option.configs.headers['Content-Type'].indexOf('x-www-form-urlencoded') > -1 && (typeof data === "undefined" ? "undefined" : _typeof(data)) == 'object' ? serialize(data) : data;
 				}
 			}
 
 			//@description 添加url参数
 
 		}, {
-			key: 'addParams',
+			key: "addParams",
 			value: function addParams() {}
 
 			//展示loading效果
 
 		}, {
-			key: 'showLoading',
+			key: "showLoading",
 			value: function showLoading() {
 				console.log("loading...");
 			}
 			//关闭loading效果
 
 		}, {
-			key: 'hideLoading',
+			key: "hideLoading",
 			value: function hideLoading() {}
 		}]);
 
@@ -7200,7 +7214,7 @@
 	}
 
 	function paramsCollection(data, prefix, strs) {
-		if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && data != undefined) {
+		if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === 'object' && data != undefined) {
 			Object.keys(data).forEach(function (key) {
 				var pref = prefix + '[' + key + ']';
 				paramsCollection(data[key], pref, strs);
@@ -7396,14 +7410,28 @@
 
 	var _redux = __webpack_require__(1);
 
+	var stateDefault = {
+		loadingStatus: false
+	};
 	function mainReducer() {
-		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : stateDefault;
 		var action = arguments[1];
 
+
 		switch (action.type) {
-			case _main.SEND:
-				console.log(action.data);
+			case _main.SEND + '_SUCCESS':
+				console.log(1);
 				return Object.assign({}, state, { value: action.data });
+
+			case _main.SEND + '_ERROR':
+				console.log(2);
+				return Object.assign({}, state, { loadingStatus: false });
+
+			case _main.UPDATELOADINGSTATUS:
+				console.log("reduce", action.data);
+				var obj = Object.assign({}, state, { loadingStatus: action.data });
+
+				return Object.assign({}, state, { loadingStatus: action.data });
 
 			default:
 				return Object.assign({}, state);
@@ -7481,6 +7509,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.REJECTED = exports.FULFILLED = exports.PENDING = undefined;
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -7496,7 +7525,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var defaultTypes = ['PENDING', 'FULFILLED', 'REJECTED'];
+	var PENDING = exports.PENDING = 'PENDING';
+	var FULFILLED = exports.FULFILLED = 'FULFILLED';
+	var REJECTED = exports.REJECTED = 'REJECTED';
+
+	var defaultTypes = [PENDING, FULFILLED, REJECTED];
 
 	/**
 	 * @function promiseMiddleware
@@ -7530,9 +7563,9 @@
 	        // Assign values for promise type suffixes
 
 	        var _promiseTypeSuffixes = _slicedToArray(promiseTypeSuffixes, 3),
-	            PENDING = _promiseTypeSuffixes[0],
-	            FULFILLED = _promiseTypeSuffixes[1],
-	            REJECTED = _promiseTypeSuffixes[2];
+	            _PENDING = _promiseTypeSuffixes[0],
+	            _FULFILLED = _promiseTypeSuffixes[1],
+	            _REJECTED = _promiseTypeSuffixes[2];
 
 	        /**
 	         * @function getAction
@@ -7545,7 +7578,7 @@
 
 	        var getAction = function getAction(newPayload, isRejected) {
 	          return _extends({
-	            type: type + '_' + (isRejected ? REJECTED : FULFILLED)
+	            type: type + '_' + (isRejected ? _REJECTED : _FULFILLED)
 	          }, newPayload === null || typeof newPayload === 'undefined' ? {} : {
 	            payload: newPayload
 	          }, meta !== undefined ? { meta: meta } : {}, isRejected ? {
@@ -7576,39 +7609,39 @@
 	         * (for optimistic updates) and/or meta from the original action.
 	         */
 	        next(_extends({
-	          type: type + '_' + PENDING
+	          type: type + '_' + _PENDING
 	        }, data !== undefined ? { payload: data } : {}, meta !== undefined ? { meta: meta } : {}));
 
 	        /*
-	         * @function handleReject
-	         * @description Dispatch the rejected action and return
-	         * an error object. The error object is the original error
-	         * that was thrown. The user of the library is responsible for
-	         * best practices in ensure that they are throwing an Error object.
-	         * @params reason The reason the promise was rejected
+	         * @function transformFulfill
+	         * @description Transforms a fulfilled value into a success object.
 	         * @returns {object}
+	         */
+	        var transformFulfill = function transformFulfill() {
+	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	          var resolvedAction = getAction(value, false);
+	          return { value: value, action: resolvedAction };
+	        };
+
+	        /*
+	         * @function handleReject
+	         * @description Dispatch the rejected action.
+	         * @returns {void}
 	         */
 	        var handleReject = function handleReject(reason) {
 	          var rejectedAction = getAction(reason, true);
 	          dispatch(rejectedAction);
-	          throw reason;
 	        };
 
 	        /*
 	         * @function handleFulfill
-	         * @description Dispatch the fulfilled action and
-	         * return the success object. The success object should
-	         * contain the value and the dispatched action.
-	         * @param value The value the promise was resloved with
-	         * @returns {object}
+	         * @description Dispatch the fulfilled action.
+	         * @param successValue The value from transformFulfill
+	         * @returns {void}
 	         */
-	        var handleFulfill = function handleFulfill() {
-	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	          var resolvedAction = getAction(value, false);
-	          dispatch(resolvedAction);
-
-	          return { value: value, action: resolvedAction };
+	        var handleFulfill = function handleFulfill(successValue) {
+	          dispatch(successValue.action);
 	        };
 
 	        /**
@@ -7640,7 +7673,13 @@
 	         *   }
 	         * }
 	         */
-	        return promise.then(handleFulfill, handleReject);
+	        var promiseValue = promise.then(transformFulfill);
+	        var sideEffects = promiseValue.then(handleFulfill, handleReject);
+	        return sideEffects.then(function () {
+	          return promiseValue;
+	        }, function () {
+	          return promiseValue;
+	        });
 	      };
 	    };
 	  };

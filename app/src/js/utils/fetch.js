@@ -51,7 +51,9 @@ let _fetch = window.fetch;
 		}
 		//如果没有成功返回, 或者数据无法json序列化,则会走这里
 		catchParseJSON(err){
-			console.log(err);
+
+			console.log("data Error:"+err);
+			return Promise.reject();
 		}
 		//这里对返回的数据进行检查,根据后端的返回值Code 可以进行一部分的统一处理
 		checkCode(response){
@@ -66,7 +68,6 @@ let _fetch = window.fetch;
 				if(headers['Content-Type']==undefined){
 					option.configs.headers=Object.assign({'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',Accept:'application/json, text/plain, */*'},headers);
 				}
-				
 				option.configs.body=option.configs.headers['Content-Type'].indexOf('x-www-form-urlencoded')>-1&&(typeof data=='object')?serialize(data):data;
 			}
 		}

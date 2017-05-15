@@ -17,9 +17,13 @@ function matchDispatchToProps(dispatch) {
 
 
 class Main extends React.Component{
+constructor(...args){
+	super(...args);
+}
+
+
 componentDidMount(){
 
-	//console.log(this) 
 }
 
 
@@ -30,9 +34,19 @@ alertViewOpen(){
 	this.refs.alertView.open();
 }
 sendHandle(){
+	this.props.updateLoadingStatus(true);
 	this.props.send({name:"abc"});
 }
 render(){
+
+	var send;
+	if(this.props.state.loadingStatus){
+		send = <div className="sendBox loading">sending,please wait...</div>
+	}else{
+		send = <div onClick={this.sendHandle.bind(this)} className="sendBox">send</div>
+	}
+
+
 	return (
 		<section className="body">
 			<article>
@@ -65,7 +79,7 @@ render(){
 							<p><input placeholder="Full name" /></p>
 							<p><input placeholder="Emall" /></p>
 							<p><input placeholder="Confirm emall" /></p>
-							<div onClick={this.sendHandle.bind(this)} className="sendBox">send</div>
+							{send}
 						</div>
 						<div className="formClose close"></div>
 					</div>	

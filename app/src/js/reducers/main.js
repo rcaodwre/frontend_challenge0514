@@ -1,21 +1,17 @@
 import {
-	UPDATE
+	SEND
 } from '../actions/main'
 import {combineReducers} from 'redux';
 
 function mainReducer(state = {},action){
 	switch (action.type){
-		case UPDATE:
+		case  `${SEND}_SUCCESS`:
+		console.log(action.payload);
 		return Object.assign({},state,{value:action.data});
-
+		
 		default:
-		return  Object.assign({},state,{abc:"123"});
+		return  Object.assign({},state);
 	}
 }
 
-
-const app = combineReducers({
-	mainReducer
-})
-
-export default app;
+export default  mainReducer

@@ -46,7 +46,6 @@ html{
   background: #F2F2F2;
 }
 body {
-  line-height:1.5;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -70,7 +69,23 @@ footer { width:100%; background-color: #333; position:fixed; bottom:0px; left:0p
 footer .footerBox{ width:375px; height:64px;  margin:0 auto; display: flex;  align-items: center; justify-content: center;  }
 footer .footerBox p{ text-align: center;color:#fff; font-size: 12px;}
 
-@media screen and (min-width:800px){
+
+//container
+.container { width:100%; position:absolute; left:0px; top:64px; right:0px; bottom:64px; text-align: center;  display: flex; align-items: center; justify-content: center;  }
+.container h2{font-size:28px; font-weight: bold; line-height: 1.2em; padding-bottom: 20px;  }
+.container .button{ width:150px;font-size:12px; height:35px; border:2px solid #333;/*px*/ text-align: center; line-height: 35px;  margin:20px auto 0px; border-radius: 5px; cursor: pointer  }
+.container span{ font-size:12px;}
+
+//formBox
+.formBg{ width:100%; height:100%; display:flex;align-items: center; justify-content: center; }
+.formClose{ width:100%; height:100%; position: absolute;     }
+.formBox { width:375px;   background-color: #fff; height:400px; position: relative; z-index:1   }
+.formBox h3{ font-size:14px; text-align: center; padding:50px 0px;  }
+.formBox p {display: flex; justify-content:center; padding-bottom:10px; }
+.formBox p input{ height:30px; width:290px; border:1px solid #999; padding-left:10px; font-size:12px;}
+.formBox .sendBox{  height:30px; width:300px; border:1px solid #999;  font-size:12px; margin:40px auto 0px; border-radius: 5px; line-height: 30px; text-align: center}
+
+@media screen and (min-width:1080px){
   header .headerBox{ width:750px; }
   footer .footerBox{ width:750px; }
 }

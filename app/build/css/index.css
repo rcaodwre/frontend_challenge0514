@@ -110,7 +110,6 @@ html {
 }
 
 body {
-  line-height: 1.5;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
@@ -177,7 +176,123 @@ footer .footerBox p {
   font-size: 0.32rem;
 }
 
-@media screen and (min-width: 800px) {
+.container {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 1.706667rem;
+  right: 0;
+  bottom: 1.706667rem;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.container h2 {
+  font-size: 0.746667rem;
+  font-weight: bold;
+  line-height: 1.2em;
+  padding-bottom: 0.533333rem;
+}
+
+.container .button {
+  width: 4rem;
+  font-size: 0.32rem;
+  height: 0.933333rem;
+  text-align: center;
+  line-height: 0.933333rem;
+  margin: 0.533333rem auto 0;
+  border-radius: 0.133333rem;
+  cursor: pointer;
+}
+
+[data-dpr="1"] .container .button {
+  border: 1px solid #333;
+}
+
+[data-dpr="2"] .container .button {
+  border: 2px solid #333;
+}
+
+[data-dpr="3"] .container .button {
+  border: 3px solid #333;
+}
+
+.container span {
+  font-size: 0.32rem;
+}
+
+.formBg {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.formClose {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.formBox {
+  width: 10rem;
+  background-color: #fff;
+  height: 10.666667rem;
+  position: relative;
+  z-index: 1;
+}
+
+.formBox h3 {
+  font-size: 0.373333rem;
+  text-align: center;
+  padding: 1.333333rem 0;
+}
+
+.formBox p {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding-bottom: 0.266667rem;
+}
+
+.formBox p input {
+  height: 0.8rem;
+  width: 7.733333rem;
+  border: 0.026667rem solid #999;
+  padding-left: 0.266667rem;
+  font-size: 0.32rem;
+}
+
+.formBox .sendBox {
+  height: 0.8rem;
+  width: 8rem;
+  border: 0.026667rem solid #999;
+  font-size: 0.32rem;
+  margin: 1.066667rem auto 0;
+  border-radius: 0.133333rem;
+  line-height: 0.8rem;
+  text-align: center;
+}
+
+@media screen and (min-width: 1080px) {
   header .headerBox {
     width: 20rem;
   }

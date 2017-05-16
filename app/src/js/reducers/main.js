@@ -23,7 +23,7 @@ function mainReducer(state = stateDefault,action){
 			
 
 
-			return Object.assign({},state,{loadingStatus:false});
+			return Object.assign({},state,{loadingStatus:false,isOpen:false});
 
 		case  UPDATE:
 			return Object.assign({},state,action.data);	
@@ -33,7 +33,8 @@ function mainReducer(state = stateDefault,action){
 			if(state.name.length < 3){
 				return Object.assign({},state,{message:"用户名不得少于3个字符"});
 			};
-			if(!(/^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$/).test(state.email)){
+
+			if(!(/^([A-Za-z0-9-_.]+)*@([A-Za-z0-9-_.]+)$/).test(state.email)){
 				return Object.assign({},state,{message:"请输入正确的邮箱地址"});
 			}
 

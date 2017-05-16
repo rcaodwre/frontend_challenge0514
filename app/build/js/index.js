@@ -6855,7 +6855,12 @@
 		}, {
 			key: 'alertViewOpen',
 			value: function alertViewOpen() {
-				this.refs.alertView.open();
+				this.props.update({ isOpen: true });
+			}
+		}, {
+			key: 'alertViewClose',
+			value: function alertViewClose() {
+				this.props.update({ isOpen: false });
 			}
 		}, {
 			key: 'sendHandle',
@@ -6952,7 +6957,7 @@
 						null,
 						_react2.default.createElement(
 							_AlertView2.default,
-							{ ref: 'alertView' },
+							{ ref: 'alertView', isOpen: this.props.state.isOpen },
 							_react2.default.createElement(
 								'div',
 								{ className: 'formBg' },
@@ -6962,7 +6967,7 @@
 									_react2.default.createElement(
 										'h3',
 										null,
-										'Request an invite1'
+										'Request an invite'
 									),
 									_react2.default.createElement(
 										'p',
@@ -6986,7 +6991,7 @@
 										this.props.state.message
 									)
 								),
-								_react2.default.createElement('div', { className: 'formClose close' })
+								_react2.default.createElement('div', { className: 'formClose close', onClick: this.alertViewClose.bind(this) })
 							)
 						)
 					)
@@ -7366,7 +7371,8 @@
 	                }
 	                target = this.getClass(target.parentNode, "close");
 	            }
-	            this.close();
+	            this.props.close();
+	            //this.close();
 	        }
 	    }, {
 	        key: "getClass",
@@ -7381,33 +7387,54 @@
 	            return children;
 	        }
 	    }, {
-	        key: "open",
-	        value: function open() {
-	            this.setState({
-	                isOpen: true
-	            });
-
-	            this.refs.warp.style.visibility = "visible";
-	            this.refs.warp.style.opacity = "0.5";
-	            this.refs.child.style.visibility = "visible";
-	            this.refs.child.style.transform = "translate3d(0,0px,0)";
-	            document.addEventListener('touchmove', this.clearEvent, { passive: false });
-	        }
-	    }, {
-	        key: "close",
-	        value: function close() {
-	            this.setState({
-	                isOpen: false
-	            });
-	            this.refs.warp.style.visibility = "hidden";
-	            this.refs.warp.style.opacity = "0";
-	            this.refs.child.style.visibility = "hidden";
-	            this.refs.child.style.transform = "translate3d(0," + this.state.height + "px,0)";
-	            document.removeEventListener('touchmove', this.clearEvent, { passive: false });
-	        }
-	    }, {
 	        key: "render",
 	        value: function render() {
+
+	            if (this.props.isOpen == true) {
+	                this.state.backgroundStyle = {
+	                    visibility: "visible",
+	                    opacity: "0.5",
+	                    position: "absolute",
+	                    left: "0px",
+	                    right: "0px",
+	                    bottom: "0px",
+	                    top: "0px",
+	                    backgroundColor: "#000",
+	                    transition: ".3s"
+	                };
+	                this.state.alertStyle = {
+	                    visibility: "visible",
+	                    transform: "translate3d(0,0px,0)",
+	                    width: "100%",
+	                    height: "100%",
+	                    position: "absolute",
+	                    bottom: "0px",
+	                    left: "0px",
+	                    transition: ".3s"
+	                };
+	            } else {
+	                this.state.backgroundStyle = {
+	                    visibility: "hidden",
+	                    opacity: "0",
+	                    position: "absolute",
+	                    left: "0px",
+	                    right: "0px",
+	                    bottom: "0px",
+	                    top: "0px",
+	                    backgroundColor: "#000",
+	                    transition: ".3s"
+	                };
+	                this.state.alertStyle = {
+	                    visibility: "hidden",
+	                    transform: "translate3d(0," + this.state.height + "px,0)",
+	                    width: "100%",
+	                    height: "100%",
+	                    position: "absolute",
+	                    bottom: "0px",
+	                    left: "0px",
+	                    transition: ".3s"
+	                };
+	            }
 
 	            return _react2.default.createElement(
 	                "div",
@@ -7415,7 +7442,7 @@
 	                _react2.default.createElement("div", { style: this.state.backgroundStyle, ref: "warp" }),
 	                _react2.default.createElement(
 	                    "div",
-	                    { style: this.state.alertStyle, ref: "child", onClick: this.checkClose.bind(this) },
+	                    { style: this.state.alertStyle, ref: "child" },
 	                    this.props.children
 	                )
 	            );
@@ -7459,7 +7486,7 @@
 				//mock 硬编码: 处理为成功状态
 
 
-				return Object.assign({}, state, { loadingStatus: false });
+				return Object.assign({}, state, { loadingStatus: false, isOpen: false });
 
 			case _main.UPDATE:
 				return Object.assign({}, state, action.data);
@@ -7469,7 +7496,8 @@
 				if (state.name.length < 3) {
 					return Object.assign({}, state, { message: "用户名不得少于3个字符" });
 				};
-				if (!/^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$/.test(state.email)) {
+
+				if (!/^([A-Za-z0-9-_.]+)*@([A-Za-z0-9-_.]+)$/.test(state.email)) {
 					return Object.assign({}, state, { message: "请输入正确的邮箱地址" });
 				}
 
@@ -7555,6 +7583,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.REJECTED = exports.FULFILLED = exports.PENDING = undefined;
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -7570,7 +7599,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var defaultTypes = ['PENDING', 'FULFILLED', 'REJECTED'];
+	var PENDING = exports.PENDING = 'PENDING';
+	var FULFILLED = exports.FULFILLED = 'FULFILLED';
+	var REJECTED = exports.REJECTED = 'REJECTED';
+
+	var defaultTypes = [PENDING, FULFILLED, REJECTED];
 
 	/**
 	 * @function promiseMiddleware
@@ -7604,9 +7637,9 @@
 	        // Assign values for promise type suffixes
 
 	        var _promiseTypeSuffixes = _slicedToArray(promiseTypeSuffixes, 3),
-	            PENDING = _promiseTypeSuffixes[0],
-	            FULFILLED = _promiseTypeSuffixes[1],
-	            REJECTED = _promiseTypeSuffixes[2];
+	            _PENDING = _promiseTypeSuffixes[0],
+	            _FULFILLED = _promiseTypeSuffixes[1],
+	            _REJECTED = _promiseTypeSuffixes[2];
 
 	        /**
 	         * @function getAction
@@ -7619,7 +7652,7 @@
 
 	        var getAction = function getAction(newPayload, isRejected) {
 	          return _extends({
-	            type: type + '_' + (isRejected ? REJECTED : FULFILLED)
+	            type: type + '_' + (isRejected ? _REJECTED : _FULFILLED)
 	          }, newPayload === null || typeof newPayload === 'undefined' ? {} : {
 	            payload: newPayload
 	          }, meta !== undefined ? { meta: meta } : {}, isRejected ? {
@@ -7650,39 +7683,39 @@
 	         * (for optimistic updates) and/or meta from the original action.
 	         */
 	        next(_extends({
-	          type: type + '_' + PENDING
+	          type: type + '_' + _PENDING
 	        }, data !== undefined ? { payload: data } : {}, meta !== undefined ? { meta: meta } : {}));
 
 	        /*
-	         * @function handleReject
-	         * @description Dispatch the rejected action and return
-	         * an error object. The error object is the original error
-	         * that was thrown. The user of the library is responsible for
-	         * best practices in ensure that they are throwing an Error object.
-	         * @params reason The reason the promise was rejected
+	         * @function transformFulfill
+	         * @description Transforms a fulfilled value into a success object.
 	         * @returns {object}
+	         */
+	        var transformFulfill = function transformFulfill() {
+	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	          var resolvedAction = getAction(value, false);
+	          return { value: value, action: resolvedAction };
+	        };
+
+	        /*
+	         * @function handleReject
+	         * @description Dispatch the rejected action.
+	         * @returns {void}
 	         */
 	        var handleReject = function handleReject(reason) {
 	          var rejectedAction = getAction(reason, true);
 	          dispatch(rejectedAction);
-	          throw reason;
 	        };
 
 	        /*
 	         * @function handleFulfill
-	         * @description Dispatch the fulfilled action and
-	         * return the success object. The success object should
-	         * contain the value and the dispatched action.
-	         * @param value The value the promise was resloved with
-	         * @returns {object}
+	         * @description Dispatch the fulfilled action.
+	         * @param successValue The value from transformFulfill
+	         * @returns {void}
 	         */
-	        var handleFulfill = function handleFulfill() {
-	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	          var resolvedAction = getAction(value, false);
-	          dispatch(resolvedAction);
-
-	          return { value: value, action: resolvedAction };
+	        var handleFulfill = function handleFulfill(successValue) {
+	          dispatch(successValue.action);
 	        };
 
 	        /**
@@ -7714,7 +7747,13 @@
 	         *   }
 	         * }
 	         */
-	        return promise.then(handleFulfill, handleReject);
+	        var promiseValue = promise.then(transformFulfill);
+	        var sideEffects = promiseValue.then(handleFulfill, handleReject);
+	        return sideEffects.then(function () {
+	          return promiseValue;
+	        }, function () {
+	          return promiseValue;
+	        });
 	      };
 	    };
 	  };

@@ -84,7 +84,9 @@ footer .footerBox p{ text-align: center;color:#fff; font-size: 12px;}
 .formBox p {display: flex; justify-content:center; padding-bottom:10px; }
 .formBox p input{ height:30px; width:290px; border:1px solid #999; padding-left:10px; font-size:12px;}
 .formBox .sendBox{  height:30px; width:300px; border:1px solid #999;  font-size:12px; margin:40px auto 0px; border-radius: 5px; line-height: 30px; text-align: center; cursor: pointer}
-.formBox .loading{ color:#ccc;}
+.formBox .loading{ color:#ccc; }
+.formBox .error{ padding-top: 20px; color:#f00}
+
 @media screen and (min-width:1080px){
   header .headerBox{ width:750px; }
   footer .footerBox{ width:750px; }

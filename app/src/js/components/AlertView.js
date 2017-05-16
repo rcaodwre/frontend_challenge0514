@@ -57,6 +57,7 @@ class AlertView extends React.Component{
     clearEvent(event){
         event.preventDefault();
     }
+
     checkClose(ev){
         //console.log(ev.target.parentNode.parentNode,this.refs.child);
         var target = this.getClass(ev.target,"close");
@@ -66,7 +67,8 @@ class AlertView extends React.Component{
             }
             target = this.getClass(target.parentNode,"close");
         }
-        this.close();
+        this.props.close();
+        //this.close();
     }
 
     getClass(children,className){
@@ -79,39 +81,61 @@ class AlertView extends React.Component{
 
         return children;
     }
-
-
-    open(){
-        this.setState({
-            isOpen : true
-        })
-        
-        this.refs.warp.style.visibility="visible";
-        this.refs.warp.style.opacity = "0.5";
-        this.refs.child.style.visibility = "visible";
-        this.refs.child.style.transform = "translate3d(0,0px,0)";
-        document.addEventListener('touchmove', this.clearEvent,{passive:false});
-    }
-
-    close(){
-        this.setState({
-            isOpen : false
-        })
-        this.refs.warp.style.visibility="hidden";
-        this.refs.warp.style.opacity = "0";
-        this.refs.child.style.visibility = "hidden";
-        this.refs.child.style.transform = `translate3d(0,${this.state.height}px,0)`;
-        document.removeEventListener('touchmove', this.clearEvent,{passive:false});
-    }
-
     render(){
+
+        if(this.props.isOpen == true){
+            this.state.backgroundStyle = {
+                visibility:"visible",
+                opacity:"0.5",
+                position:"absolute",
+                left:"0px",
+                right:"0px",
+                bottom:"0px",
+                top:"0px",
+                backgroundColor:"#000",
+                transition:".3s",
+            }
+            this.state.alertStyle = {
+                visibility:"visible",
+                transform :"translate3d(0,0px,0)",
+                width:"100%",
+                height:"100%",
+                position:"absolute",
+                bottom:"0px",
+                left:"0px",
+                transition:".3s"
+            }    
+        }else{
+             this.state.backgroundStyle = {
+                visibility:"hidden",
+                opacity:"0",
+                position:"absolute",
+                left:"0px",
+                right:"0px",
+                bottom:"0px",
+                top:"0px",
+                backgroundColor:"#000",
+                transition:".3s",
+            }
+            this.state.alertStyle = {
+                visibility:"hidden",
+                transform :`translate3d(0,${this.state.height}px,0)`,
+                width:"100%",
+                height:"100%",
+                position:"absolute",
+                bottom:"0px",
+                left:"0px",
+                transition:".3s"
+            }    
+        }
+
 
         return (
             <div style={this.state.warpStyle  } >
                 <div style={this.state.backgroundStyle} ref="warp" >
 
                 </div>
-                <div style={this.state.alertStyle } ref="child" onClick={this.checkClose.bind(this)}>
+                <div style={this.state.alertStyle } ref="child" >
                     {this.props.children}
                 </div>
             </div>

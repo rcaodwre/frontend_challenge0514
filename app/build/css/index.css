@@ -297,6 +297,11 @@ footer .footerBox p {
   color: #ccc;
 }
 
+.formBox .error {
+  padding-top: 0.533333rem;
+  color: #f00;
+}
+
 @media screen and (min-width: 1080px) {
   header .headerBox {
     width: 20rem;

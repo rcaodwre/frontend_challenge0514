@@ -43,7 +43,10 @@ confirmEmail(self,ev){
 	this.props.update({confirmEmail:ev.target.value});
 }
 alertViewOpen(){
-	this.refs.alertView.open();
+	this.props.update({isOpen:true});
+}
+alertViewClose(){
+	this.props.update({isOpen:false});
 }
 sendHandle(){
 	this.props.checkForm();
@@ -81,19 +84,20 @@ render(){
 				</footer>
 			</article>
 			<article>
-				<AlertView ref="alertView">
-					<div className="formBg">
+				<AlertView ref="alertView" isOpen={this.props.state.isOpen}>
+					<div className="formBg"  >
 						<div className="formBox">
-							<h3>Request an invite1</h3>
+							<h3>Request an invite</h3>
 							<p><input placeholder="Full name" onChange={this.changeName.bind(this,event)} value={this.props.state.name} /></p>
 							<p><input placeholder="Email" onChange={this.changeEmail.bind(this,event)} value={this.props.state.email} /></p>
 							<p><input placeholder="Confirm emall" onChange={this.confirmEmail.bind(this,event)} value={this.props.state.confirmEmail} /></p>
 							{send}
 							<p className="error">{this.props.state.message}</p>
 						</div>
-						<div className="formClose close"></div>
+						<div className="formClose close" onClick={this.alertViewClose.bind(this)} ></div>
 					</div>	
 				</AlertView>
+				
 			</article>
 		</section>
 	)

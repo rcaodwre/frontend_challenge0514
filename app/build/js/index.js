@@ -6825,11 +6825,33 @@
 		}
 
 		_createClass(Main, [{
-			key: 'componentDidMount',
-			value: function componentDidMount() {}
+			key: 'componentDidUpdate',
+			value: function componentDidUpdate() {
+				if (this.props.state.message == "send") {
+					console.log("send");
+					this.props.update({ message: "", loadingStatus: true });
+					var _props$state = this.props.state,
+					    name = _props$state.name,
+					    email = _props$state.email;
+
+					this.props.send({ name: name, email: email });
+				};
+			}
 		}, {
-			key: 'changeValue',
-			value: function changeValue(ev) {}
+			key: 'changeName',
+			value: function changeName(self, ev) {
+				this.props.update({ name: ev.target.value });
+			}
+		}, {
+			key: 'changeEmail',
+			value: function changeEmail(self, ev) {
+				this.props.update({ email: ev.target.value });
+			}
+		}, {
+			key: 'confirmEmail',
+			value: function confirmEmail(self, ev) {
+				this.props.update({ confirmEmail: ev.target.value });
+			}
 		}, {
 			key: 'alertViewOpen',
 			value: function alertViewOpen() {
@@ -6838,13 +6860,11 @@
 		}, {
 			key: 'sendHandle',
 			value: function sendHandle() {
-				this.props.updateLoadingStatus(true);
-				this.props.send({ name: "abc" });
+				this.props.checkForm();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-
 				var send;
 				if (this.props.state.loadingStatus) {
 					send = _react2.default.createElement(
@@ -6899,7 +6919,7 @@
 								),
 								_react2.default.createElement(
 									'div',
-									{ className: 'button', onClick: this.alertViewOpen.bind(this) },
+									{ className: 'button', onClick: this.alertViewOpen.bind(this, event) },
 									'Request an invite'
 								)
 							)
@@ -6942,24 +6962,29 @@
 									_react2.default.createElement(
 										'h3',
 										null,
-										'Request an invite'
+										'Request an invite1'
 									),
 									_react2.default.createElement(
 										'p',
 										null,
-										_react2.default.createElement('input', { placeholder: 'Full name' })
+										_react2.default.createElement('input', { placeholder: 'Full name', onChange: this.changeName.bind(this, event), value: this.props.state.name })
 									),
 									_react2.default.createElement(
 										'p',
 										null,
-										_react2.default.createElement('input', { placeholder: 'Emall' })
+										_react2.default.createElement('input', { placeholder: 'Email', onChange: this.changeEmail.bind(this, event), value: this.props.state.email })
 									),
 									_react2.default.createElement(
 										'p',
 										null,
-										_react2.default.createElement('input', { placeholder: 'Confirm emall' })
+										_react2.default.createElement('input', { placeholder: 'Confirm emall', onChange: this.confirmEmail.bind(this, event), value: this.props.state.confirmEmail })
 									),
-									send
+									send,
+									_react2.default.createElement(
+										'p',
+										{ className: 'error' },
+										this.props.state.message
+									)
 								),
 								_react2.default.createElement('div', { className: 'formClose close' })
 							)
@@ -6983,9 +7008,10 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.UPDATELOADINGSTATUS = exports.SEND = undefined;
+	exports.CHECKFORM = exports.UPDATE = exports.SEND = undefined;
 	exports.send = send;
-	exports.updateLoadingStatus = updateLoadingStatus;
+	exports.update = update;
+	exports.checkForm = checkForm;
 
 	var _fetch = __webpack_require__(78);
 
@@ -6994,27 +7020,32 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SEND = exports.SEND = "SEND";
-	var UPDATELOADINGSTATUS = exports.UPDATELOADINGSTATUS = "UPDATELOADINGSTATUS";
+	var UPDATE = exports.UPDATE = "UPDATE";
+	var CHECKFORM = exports.CHECKFORM = "CHECKFORM";
 
 	function send(obj) {
+		console.log(obj);
 		return {
 			type: SEND,
 			payload: new _fetch2.default({
 				url: " https://l94wc2001h.execute-api.ap-southeast-2.amazonaws.com/prod/fake-auth",
-				data: {
-					name: "mobbist",
-					email: "XXXX@fjkd.com"
-				},
+				data: obj,
 				method: "POST",
 				hasLoading: true
 			})
 		};
 	}
 
-	function updateLoadingStatus(boolean) {
+	function update(obj) {
 		return {
-			type: UPDATELOADINGSTATUS,
-			data: boolean
+			type: UPDATE,
+			data: obj
+		};
+	}
+
+	function checkForm() {
+		return {
+			type: CHECKFORM
 		};
 	}
 
@@ -7400,7 +7431,7 @@
 /* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -7408,10 +7439,11 @@
 
 	var _main = __webpack_require__(77);
 
-	var _redux = __webpack_require__(1);
-
 	var stateDefault = {
-		loadingStatus: false
+		loadingStatus: false,
+		name: "",
+		email: "",
+		confirmEmail: ""
 	};
 	function mainReducer() {
 		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : stateDefault;
@@ -7419,19 +7451,33 @@
 
 
 		switch (action.type) {
-			case _main.SEND + '_SUCCESS':
+			case _main.SEND + "_SUCCESS":
 				console.log(1);
 				return Object.assign({}, state, { value: action.data });
 
-			case _main.SEND + '_ERROR':
-				console.log(2);
+			case _main.SEND + "_ERROR":
+				//mock 硬编码: 处理为成功状态
+
+
 				return Object.assign({}, state, { loadingStatus: false });
 
-			case _main.UPDATELOADINGSTATUS:
-				console.log("reduce", action.data);
-				var obj = Object.assign({}, state, { loadingStatus: action.data });
+			case _main.UPDATE:
+				return Object.assign({}, state, action.data);
 
-				return Object.assign({}, state, { loadingStatus: action.data });
+			case _main.CHECKFORM:
+				//表单验证
+				if (state.name.length < 3) {
+					return Object.assign({}, state, { message: "用户名不得少于3个字符" });
+				};
+				if (!/^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$/.test(state.email)) {
+					return Object.assign({}, state, { message: "请输入正确的邮箱地址" });
+				}
+
+				if (state.email != state.confirmEmail) {
+					return Object.assign({}, state, { message: "两次邮箱地址不一致" });
+				}
+
+				return Object.assign({}, state, { message: "send" });
 
 			default:
 				return Object.assign({}, state);
@@ -7509,7 +7555,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.REJECTED = exports.FULFILLED = exports.PENDING = undefined;
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -7525,11 +7570,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var PENDING = exports.PENDING = 'PENDING';
-	var FULFILLED = exports.FULFILLED = 'FULFILLED';
-	var REJECTED = exports.REJECTED = 'REJECTED';
-
-	var defaultTypes = [PENDING, FULFILLED, REJECTED];
+	var defaultTypes = ['PENDING', 'FULFILLED', 'REJECTED'];
 
 	/**
 	 * @function promiseMiddleware
@@ -7563,9 +7604,9 @@
 	        // Assign values for promise type suffixes
 
 	        var _promiseTypeSuffixes = _slicedToArray(promiseTypeSuffixes, 3),
-	            _PENDING = _promiseTypeSuffixes[0],
-	            _FULFILLED = _promiseTypeSuffixes[1],
-	            _REJECTED = _promiseTypeSuffixes[2];
+	            PENDING = _promiseTypeSuffixes[0],
+	            FULFILLED = _promiseTypeSuffixes[1],
+	            REJECTED = _promiseTypeSuffixes[2];
 
 	        /**
 	         * @function getAction
@@ -7578,7 +7619,7 @@
 
 	        var getAction = function getAction(newPayload, isRejected) {
 	          return _extends({
-	            type: type + '_' + (isRejected ? _REJECTED : _FULFILLED)
+	            type: type + '_' + (isRejected ? REJECTED : FULFILLED)
 	          }, newPayload === null || typeof newPayload === 'undefined' ? {} : {
 	            payload: newPayload
 	          }, meta !== undefined ? { meta: meta } : {}, isRejected ? {
@@ -7609,39 +7650,39 @@
 	         * (for optimistic updates) and/or meta from the original action.
 	         */
 	        next(_extends({
-	          type: type + '_' + _PENDING
+	          type: type + '_' + PENDING
 	        }, data !== undefined ? { payload: data } : {}, meta !== undefined ? { meta: meta } : {}));
 
 	        /*
-	         * @function transformFulfill
-	         * @description Transforms a fulfilled value into a success object.
-	         * @returns {object}
-	         */
-	        var transformFulfill = function transformFulfill() {
-	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	          var resolvedAction = getAction(value, false);
-	          return { value: value, action: resolvedAction };
-	        };
-
-	        /*
 	         * @function handleReject
-	         * @description Dispatch the rejected action.
-	         * @returns {void}
+	         * @description Dispatch the rejected action and return
+	         * an error object. The error object is the original error
+	         * that was thrown. The user of the library is responsible for
+	         * best practices in ensure that they are throwing an Error object.
+	         * @params reason The reason the promise was rejected
+	         * @returns {object}
 	         */
 	        var handleReject = function handleReject(reason) {
 	          var rejectedAction = getAction(reason, true);
 	          dispatch(rejectedAction);
+	          throw reason;
 	        };
 
 	        /*
 	         * @function handleFulfill
-	         * @description Dispatch the fulfilled action.
-	         * @param successValue The value from transformFulfill
-	         * @returns {void}
+	         * @description Dispatch the fulfilled action and
+	         * return the success object. The success object should
+	         * contain the value and the dispatched action.
+	         * @param value The value the promise was resloved with
+	         * @returns {object}
 	         */
-	        var handleFulfill = function handleFulfill(successValue) {
-	          dispatch(successValue.action);
+	        var handleFulfill = function handleFulfill() {
+	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	          var resolvedAction = getAction(value, false);
+	          dispatch(resolvedAction);
+
+	          return { value: value, action: resolvedAction };
 	        };
 
 	        /**
@@ -7673,13 +7714,7 @@
 	         *   }
 	         * }
 	         */
-	        var promiseValue = promise.then(transformFulfill);
-	        var sideEffects = promiseValue.then(handleFulfill, handleReject);
-	        return sideEffects.then(function () {
-	          return promiseValue;
-	        }, function () {
-	          return promiseValue;
-	        });
+	        return promise.then(handleFulfill, handleReject);
 	      };
 	    };
 	  };

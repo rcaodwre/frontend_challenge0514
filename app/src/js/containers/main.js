@@ -22,30 +22,39 @@ constructor(...args){
 }
 
 
-componentDidMount(){
-
+componentDidUpdate(){
+	if(this.props.state.message == "send"){
+		console.log("send");
+		this.props.update({message:"",loadingStatus:true})
+		var {name,email} = this.props.state;
+		this.props.send({name:name,email:email});
+	};
 }
 
 
-changeValue(ev){
-	
+changeName(self,ev){
+	this.props.update({name:ev.target.value});
+}
+changeEmail(self,ev){
+	this.props.update({email:ev.target.value});
+}
+
+confirmEmail(self,ev){
+	this.props.update({confirmEmail:ev.target.value});
 }
 alertViewOpen(){
 	this.refs.alertView.open();
 }
 sendHandle(){
-	this.props.updateLoadingStatus(true);
-	this.props.send({name:"abc"});
+	this.props.checkForm();
 }
 render(){
-
 	var send;
 	if(this.props.state.loadingStatus){
 		send = <div className="sendBox loading">sending,please wait...</div>
 	}else{
 		send = <div onClick={this.sendHandle.bind(this)} className="sendBox">send</div>
 	}
-
 
 	return (
 		<section className="body">
@@ -59,7 +68,7 @@ render(){
 					<div >
 						<h2>A better way <br /> to enjoy every day.  </h2>
 						<span>be the first to know when we launch.</span>
-						<div className="button" onClick={this.alertViewOpen.bind(this)}>Request an invite</div>
+						<div className="button" onClick={this.alertViewOpen.bind(this,event)}>Request an invite</div>
 					</div>
 				</article>
 				<footer>
@@ -75,11 +84,12 @@ render(){
 				<AlertView ref="alertView">
 					<div className="formBg">
 						<div className="formBox">
-							<h3>Request an invite</h3>
-							<p><input placeholder="Full name" /></p>
-							<p><input placeholder="Emall" /></p>
-							<p><input placeholder="Confirm emall" /></p>
+							<h3>Request an invite1</h3>
+							<p><input placeholder="Full name" onChange={this.changeName.bind(this,event)} value={this.props.state.name} /></p>
+							<p><input placeholder="Email" onChange={this.changeEmail.bind(this,event)} value={this.props.state.email} /></p>
+							<p><input placeholder="Confirm emall" onChange={this.confirmEmail.bind(this,event)} value={this.props.state.confirmEmail} /></p>
 							{send}
+							<p className="error">{this.props.state.message}</p>
 						</div>
 						<div className="formClose close"></div>
 					</div>	

@@ -14,16 +14,22 @@ function mainReducer(state = stateDefault,action){
 
 	switch (action.type){
 		case  `${SEND}_SUCCESS`:
-			console.log(1);
-			return Object.assign({},state,{value:action.data});
+			//硬编码: 处理为当如果是某个邮箱则报错
+			if(state.email == "usedemail@airwallex.com"){
+				return Object.assign({},state,{message:" hardcoded: server error",loadingStatus:false});
+			}
+			//mock 硬编码: 处理为成功状态
+			return Object.assign({},state,{loadingStatus:false,isOpenForm:false,isOpenSuccess:true,name:"",email:"",confirmEmail:""});
 
 		case  `${SEND}_ERROR`:
-			//mock 硬编码: 处理为成功状态
-
+			//硬编码: 处理为当如果是某个邮箱则报错
+			if(state.email == "usedemail@airwallex.com"){
+				return Object.assign({},state,{message:" hardcoded: server error",loadingStatus:false});
+			}
 			
 
-
-			return Object.assign({},state,{loadingStatus:false,isOpen:false});
+			//mock 硬编码: 处理为成功状态
+			return Object.assign({},state,{loadingStatus:false,isOpenForm:false,isOpenSuccess:true});
 
 		case  UPDATE:
 			return Object.assign({},state,action.data);	
@@ -34,7 +40,7 @@ function mainReducer(state = stateDefault,action){
 				return Object.assign({},state,{message:"用户名不得少于3个字符"});
 			};
 
-			if(!(/^([A-Za-z0-9-_.]+)*@([A-Za-z0-9-_.]+)$/).test(state.email)){
+			if(!(/^([A-Za-z0-9-_]+)*@([A-Za-z0-9-_]+)\.([A-Za-z]+)$/).test(state.email)){
 				return Object.assign({},state,{message:"请输入正确的邮箱地址"});
 			}
 

@@ -43,13 +43,16 @@ confirmEmail(self,ev){
 	this.props.update({confirmEmail:ev.target.value});
 }
 alertViewOpen(){
-	this.props.update({isOpen:true});
+	this.props.update({isOpenForm:true});
 }
 alertViewClose(){
-	this.props.update({isOpen:false});
+	this.props.update({isOpenForm:false});
 }
 sendHandle(){
 	this.props.checkForm();
+}
+successOK(){
+	this.props.update({isOpenSuccess:false});
 }
 render(){
 	var send;
@@ -84,7 +87,7 @@ render(){
 				</footer>
 			</article>
 			<article>
-				<AlertView ref="alertView" isOpen={this.props.state.isOpen}>
+				<AlertView isOpen={this.props.state.isOpenForm}>
 					<div className="formBg"  >
 						<div className="formBox">
 							<h3>Request an invite</h3>
@@ -97,7 +100,17 @@ render(){
 						<div className="formClose close" onClick={this.alertViewClose.bind(this)} ></div>
 					</div>	
 				</AlertView>
-				
+				<AlertView isOpen={this.props.state.isOpenSuccess}>
+					<div className="formBg"  >
+						<div className="formBox">
+							<h3>ALL done !</h3>
+							<p>you will be one of the fiest to experience</p>
+							<p>Broccoli & Co. when we launch.</p>
+							<div className="sendBox" onClick={this.successOK.bind(this)}>OK</div>
+						</div>
+					</div>
+					<div className="formClose close" onClick={this.alertViewClose.bind(this)} ></div>
+				</AlertView>
 			</article>
 		</section>
 	)

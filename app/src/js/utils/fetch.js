@@ -47,11 +47,12 @@ let _fetch = window.fetch;
 		}
 		//返回数据,讲数据以json的格式返回
 		parseJSON(response){
-			return response.json();
+			
+			return response.text();
 		}
 		//如果没有成功返回, 或者数据无法json序列化,则会走这里
 		catchParseJSON(err){
-
+			
 			console.log("data Error:"+err);
 			return Promise.reject();
 		}

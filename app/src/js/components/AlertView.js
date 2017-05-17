@@ -9,24 +9,15 @@ class AlertView extends React.Component{
         }
     }
     componentWillMount(){
-        this.state.warpStyle ={
+       
+
+        this.state.backgroundStyle ={
             position:"fixed",
             left:"0px",
             right:"0px",
             bottom:"0px",
             top:"0px",
-            zIndex:"999",
-            visibility:"hidden"
-        }
-
-        this.state.backgroundStyle ={
-            position:"absolute",
-            left:"0px",
-            right:"0px",
-            bottom:"0px",
-            top:"0px",
-            opacity:0,
-            backgroundColor:"#000",
+            backgroundColor:"rgba(0,0,0,0)",
             transition:".3s",
         }
     }
@@ -41,6 +32,7 @@ class AlertView extends React.Component{
                 position:"absolute",
                 bottom:"0px",
                 left:"0px",
+                
                 transition:".3s",
                 transform : `translate3d(0,${this.state.height}px,0)`
             }
@@ -60,15 +52,14 @@ class AlertView extends React.Component{
 
     checkClose(ev){
         //console.log(ev.target.parentNode.parentNode,this.refs.child);
-        var target = this.getClass(ev.target,"close");
-        while(target){
-            if(target == this.refs.child){
-                return
-            }
-            target = this.getClass(target.parentNode,"close");
-        }
-        this.props.close();
-        //this.close();
+        // var target = this.getClass(ev.target,"close");
+        // while(target){
+        //     if(target == this.refs.child){
+        //         return
+        //     }
+        //     target = this.getClass(target.parentNode,"close");
+        // }
+        // this.props.close();
     }
 
     getClass(children,className){
@@ -86,13 +77,12 @@ class AlertView extends React.Component{
         if(this.props.isOpen == true){
             this.state.backgroundStyle = {
                 visibility:"visible",
-                opacity:"0.5",
-                position:"absolute",
+                position:"fixed",
                 left:"0px",
                 right:"0px",
                 bottom:"0px",
                 top:"0px",
-                backgroundColor:"#000",
+                backgroundColor:"rgba(0,0,0,0.5)",
                 transition:".3s",
             }
             this.state.alertStyle = {
@@ -109,12 +99,12 @@ class AlertView extends React.Component{
              this.state.backgroundStyle = {
                 visibility:"hidden",
                 opacity:"0",
-                position:"absolute",
+                position:"fixed",
                 left:"0px",
                 right:"0px",
                 bottom:"0px",
                 top:"0px",
-                backgroundColor:"#000",
+                backgroundColor:"rgba(0,0,0,0)",
                 transition:".3s",
             }
             this.state.alertStyle = {
@@ -131,10 +121,8 @@ class AlertView extends React.Component{
 
 
         return (
-            <div style={this.state.warpStyle  } >
-                <div style={this.state.backgroundStyle} ref="warp" >
-
-                </div>
+            <div style={this.state.backgroundStyle  } >
+             
                 <div style={this.state.alertStyle } ref="child" >
                     {this.props.children}
                 </div>

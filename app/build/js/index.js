@@ -6855,17 +6855,22 @@
 		}, {
 			key: 'alertViewOpen',
 			value: function alertViewOpen() {
-				this.props.update({ isOpen: true });
+				this.props.update({ isOpenForm: true });
 			}
 		}, {
 			key: 'alertViewClose',
 			value: function alertViewClose() {
-				this.props.update({ isOpen: false });
+				this.props.update({ isOpenForm: false });
 			}
 		}, {
 			key: 'sendHandle',
 			value: function sendHandle() {
 				this.props.checkForm();
+			}
+		}, {
+			key: 'successOK',
+			value: function successOK() {
+				this.props.update({ isOpenSuccess: false });
 			}
 		}, {
 			key: 'render',
@@ -6957,7 +6962,7 @@
 						null,
 						_react2.default.createElement(
 							_AlertView2.default,
-							{ ref: 'alertView', isOpen: this.props.state.isOpen },
+							{ isOpen: this.props.state.isOpenForm },
 							_react2.default.createElement(
 								'div',
 								{ className: 'formBg' },
@@ -6993,6 +6998,39 @@
 								),
 								_react2.default.createElement('div', { className: 'formClose close', onClick: this.alertViewClose.bind(this) })
 							)
+						),
+						_react2.default.createElement(
+							_AlertView2.default,
+							{ isOpen: this.props.state.isOpenSuccess },
+							_react2.default.createElement(
+								'div',
+								{ className: 'formBg' },
+								_react2.default.createElement(
+									'div',
+									{ className: 'formBox' },
+									_react2.default.createElement(
+										'h3',
+										null,
+										'ALL done !'
+									),
+									_react2.default.createElement(
+										'p',
+										null,
+										'you will be one of the fiest to experience'
+									),
+									_react2.default.createElement(
+										'p',
+										null,
+										'Broccoli & Co. when we launch.'
+									),
+									_react2.default.createElement(
+										'div',
+										{ className: 'sendBox', onClick: this.successOK.bind(this) },
+										'OK'
+									)
+								)
+							),
+							_react2.default.createElement('div', { className: 'formClose close', onClick: this.alertViewClose.bind(this) })
 						)
 					)
 				);
@@ -7146,7 +7184,8 @@
 		}, {
 			key: "parseJSON",
 			value: function parseJSON(response) {
-				return response.json();
+
+				return response.text();
 			}
 			//如果没有成功返回, 或者数据无法json序列化,则会走这里
 
@@ -7311,24 +7350,14 @@
 	    _createClass(AlertView, [{
 	        key: "componentWillMount",
 	        value: function componentWillMount() {
-	            this.state.warpStyle = {
+
+	            this.state.backgroundStyle = {
 	                position: "fixed",
 	                left: "0px",
 	                right: "0px",
 	                bottom: "0px",
 	                top: "0px",
-	                zIndex: "999",
-	                visibility: "hidden"
-	            };
-
-	            this.state.backgroundStyle = {
-	                position: "absolute",
-	                left: "0px",
-	                right: "0px",
-	                bottom: "0px",
-	                top: "0px",
-	                opacity: 0,
-	                backgroundColor: "#000",
+	                backgroundColor: "rgba(0,0,0,0)",
 	                transition: ".3s"
 	            };
 	        }
@@ -7345,6 +7374,7 @@
 	                    position: "absolute",
 	                    bottom: "0px",
 	                    left: "0px",
+
 	                    transition: ".3s",
 	                    transform: "translate3d(0," + this.state.height + "px,0)"
 	                }
@@ -7364,15 +7394,14 @@
 	        key: "checkClose",
 	        value: function checkClose(ev) {
 	            //console.log(ev.target.parentNode.parentNode,this.refs.child);
-	            var target = this.getClass(ev.target, "close");
-	            while (target) {
-	                if (target == this.refs.child) {
-	                    return;
-	                }
-	                target = this.getClass(target.parentNode, "close");
-	            }
-	            this.props.close();
-	            //this.close();
+	            // var target = this.getClass(ev.target,"close");
+	            // while(target){
+	            //     if(target == this.refs.child){
+	            //         return
+	            //     }
+	            //     target = this.getClass(target.parentNode,"close");
+	            // }
+	            // this.props.close();
 	        }
 	    }, {
 	        key: "getClass",
@@ -7393,13 +7422,12 @@
 	            if (this.props.isOpen == true) {
 	                this.state.backgroundStyle = {
 	                    visibility: "visible",
-	                    opacity: "0.5",
-	                    position: "absolute",
+	                    position: "fixed",
 	                    left: "0px",
 	                    right: "0px",
 	                    bottom: "0px",
 	                    top: "0px",
-	                    backgroundColor: "#000",
+	                    backgroundColor: "rgba(0,0,0,0.5)",
 	                    transition: ".3s"
 	                };
 	                this.state.alertStyle = {
@@ -7416,12 +7444,12 @@
 	                this.state.backgroundStyle = {
 	                    visibility: "hidden",
 	                    opacity: "0",
-	                    position: "absolute",
+	                    position: "fixed",
 	                    left: "0px",
 	                    right: "0px",
 	                    bottom: "0px",
 	                    top: "0px",
-	                    backgroundColor: "#000",
+	                    backgroundColor: "rgba(0,0,0,0)",
 	                    transition: ".3s"
 	                };
 	                this.state.alertStyle = {
@@ -7438,8 +7466,7 @@
 
 	            return _react2.default.createElement(
 	                "div",
-	                { style: this.state.warpStyle },
-	                _react2.default.createElement("div", { style: this.state.backgroundStyle, ref: "warp" }),
+	                { style: this.state.backgroundStyle },
 	                _react2.default.createElement(
 	                    "div",
 	                    { style: this.state.alertStyle, ref: "child" },
@@ -7479,14 +7506,21 @@
 
 		switch (action.type) {
 			case _main.SEND + "_SUCCESS":
-				console.log(1);
-				return Object.assign({}, state, { value: action.data });
+				//硬编码: 处理为当如果是某个邮箱则报错
+				if (state.email == "usedemail@airwallex.com") {
+					return Object.assign({}, state, { message: " hardcoded: server error", loadingStatus: false });
+				}
+				//mock 硬编码: 处理为成功状态
+				return Object.assign({}, state, { loadingStatus: false, isOpenForm: false, isOpenSuccess: true, name: "", email: "", confirmEmail: "" });
 
 			case _main.SEND + "_ERROR":
+				//硬编码: 处理为当如果是某个邮箱则报错
+				if (state.email == "usedemail@airwallex.com") {
+					return Object.assign({}, state, { message: " hardcoded: server error", loadingStatus: false });
+				}
+
 				//mock 硬编码: 处理为成功状态
-
-
-				return Object.assign({}, state, { loadingStatus: false, isOpen: false });
+				return Object.assign({}, state, { loadingStatus: false, isOpenForm: false, isOpenSuccess: true });
 
 			case _main.UPDATE:
 				return Object.assign({}, state, action.data);
@@ -7497,7 +7531,7 @@
 					return Object.assign({}, state, { message: "用户名不得少于3个字符" });
 				};
 
-				if (!/^([A-Za-z0-9-_.]+)*@([A-Za-z0-9-_.]+)$/.test(state.email)) {
+				if (!/^([A-Za-z0-9-_]+)*@([A-Za-z0-9-_]+)\.([A-Za-z]+)$/.test(state.email)) {
 					return Object.assign({}, state, { message: "请输入正确的邮箱地址" });
 				}
 
@@ -7583,7 +7617,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.REJECTED = exports.FULFILLED = exports.PENDING = undefined;
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -7599,11 +7632,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var PENDING = exports.PENDING = 'PENDING';
-	var FULFILLED = exports.FULFILLED = 'FULFILLED';
-	var REJECTED = exports.REJECTED = 'REJECTED';
-
-	var defaultTypes = [PENDING, FULFILLED, REJECTED];
+	var defaultTypes = ['PENDING', 'FULFILLED', 'REJECTED'];
 
 	/**
 	 * @function promiseMiddleware
@@ -7637,9 +7666,9 @@
 	        // Assign values for promise type suffixes
 
 	        var _promiseTypeSuffixes = _slicedToArray(promiseTypeSuffixes, 3),
-	            _PENDING = _promiseTypeSuffixes[0],
-	            _FULFILLED = _promiseTypeSuffixes[1],
-	            _REJECTED = _promiseTypeSuffixes[2];
+	            PENDING = _promiseTypeSuffixes[0],
+	            FULFILLED = _promiseTypeSuffixes[1],
+	            REJECTED = _promiseTypeSuffixes[2];
 
 	        /**
 	         * @function getAction
@@ -7652,7 +7681,7 @@
 
 	        var getAction = function getAction(newPayload, isRejected) {
 	          return _extends({
-	            type: type + '_' + (isRejected ? _REJECTED : _FULFILLED)
+	            type: type + '_' + (isRejected ? REJECTED : FULFILLED)
 	          }, newPayload === null || typeof newPayload === 'undefined' ? {} : {
 	            payload: newPayload
 	          }, meta !== undefined ? { meta: meta } : {}, isRejected ? {
@@ -7683,39 +7712,39 @@
 	         * (for optimistic updates) and/or meta from the original action.
 	         */
 	        next(_extends({
-	          type: type + '_' + _PENDING
+	          type: type + '_' + PENDING
 	        }, data !== undefined ? { payload: data } : {}, meta !== undefined ? { meta: meta } : {}));
 
 	        /*
-	         * @function transformFulfill
-	         * @description Transforms a fulfilled value into a success object.
-	         * @returns {object}
-	         */
-	        var transformFulfill = function transformFulfill() {
-	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-	          var resolvedAction = getAction(value, false);
-	          return { value: value, action: resolvedAction };
-	        };
-
-	        /*
 	         * @function handleReject
-	         * @description Dispatch the rejected action.
-	         * @returns {void}
+	         * @description Dispatch the rejected action and return
+	         * an error object. The error object is the original error
+	         * that was thrown. The user of the library is responsible for
+	         * best practices in ensure that they are throwing an Error object.
+	         * @params reason The reason the promise was rejected
+	         * @returns {object}
 	         */
 	        var handleReject = function handleReject(reason) {
 	          var rejectedAction = getAction(reason, true);
 	          dispatch(rejectedAction);
+	          throw reason;
 	        };
 
 	        /*
 	         * @function handleFulfill
-	         * @description Dispatch the fulfilled action.
-	         * @param successValue The value from transformFulfill
-	         * @returns {void}
+	         * @description Dispatch the fulfilled action and
+	         * return the success object. The success object should
+	         * contain the value and the dispatched action.
+	         * @param value The value the promise was resloved with
+	         * @returns {object}
 	         */
-	        var handleFulfill = function handleFulfill(successValue) {
-	          dispatch(successValue.action);
+	        var handleFulfill = function handleFulfill() {
+	          var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+	          var resolvedAction = getAction(value, false);
+	          dispatch(resolvedAction);
+
+	          return { value: value, action: resolvedAction };
 	        };
 
 	        /**
@@ -7747,13 +7776,7 @@
 	         *   }
 	         * }
 	         */
-	        var promiseValue = promise.then(transformFulfill);
-	        var sideEffects = promiseValue.then(handleFulfill, handleReject);
-	        return sideEffects.then(function () {
-	          return promiseValue;
-	        }, function () {
-	          return promiseValue;
-	        });
+	        return promise.then(handleFulfill, handleReject);
 	      };
 	    };
 	  };

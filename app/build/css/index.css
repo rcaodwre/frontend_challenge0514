@@ -104,8 +104,6 @@ i {
 }
 
 html {
-  overflow-y: auto;
-  min-height: 100vh;
   background: #F2F2F2;
 }
 
@@ -271,6 +269,7 @@ footer .footerBox p {
   -ms-flex-pack: center;
   justify-content: center;
   padding-bottom: 0.266667rem;
+  font-size: 0.32rem;
 }
 
 .formBox p input {
